@@ -11,10 +11,11 @@ use windows::core::{PCWSTR, w};
 
 use snowhush_core::version::{field, newer};
 
-const REPOSITORY: &str = "mbezruchko/Snowhush";
-const INSTALLER: &str = "Snowhush-Setup.exe";
+/// Portable build: updates come from this fork's releases, never from the original's installer.
+const REPOSITORY: &str = "sintezator2763/Snowhush-Portable";
+const INSTALLER: &str = "Snowhush-Portable.zip";
 
-/// A release newer than this build that carries an installer for Windows.
+/// A release newer than this build that carries the portable zip.
 pub struct Release {
     pub version: String,
     pub url: String,
@@ -28,7 +29,7 @@ pub fn check() -> Result<Option<Release>, String> {
     if !body.contains(&format!("\"{INSTALLER}\"")) || !newer(version, env!("CARGO_PKG_VERSION")) {
         return Ok(None);
     }
-    Ok(Some(Release { version: version.to_string(), url: format!("https://github.com/{REPOSITORY}/releases/download/{tag}/{INSTALLER}") }))
+    Ok(Some(Release { version: version.to_string(), url: format!("https://github.com/{REPOSITORY}/releases/tag/{tag}") }))
 }
 
 pub fn open(url: &str) {
