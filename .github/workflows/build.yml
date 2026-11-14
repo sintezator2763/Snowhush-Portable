@@ -1,0 +1,37 @@
+name: build
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: cargo build --release --locked --bin Snowhush
+        working-directory: windows
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist/Snowhush-Portable | Out-Null
+          Copy-Item windows/target/release/Snowhush.exe dist/Snowhush-Portable/
+          Copy-Item LICENSE dist/Snowhush-Portable/
+          Compress-Archive -Path dist/Snowhush-Portable -DestinationPath dist/Snowhush-Portable.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Snowhush-Portable
+          path: dist/Snowhush-Portable.zip
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/Snowhush-Portable.zip --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/Snowhush-Portable.zip --title "$GITHUB_REF_NAME" --generate-notes
+          fi
