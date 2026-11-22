@@ -1,6 +1,6 @@
 # Snowhush Portable
 
-An unofficial portable build of [Snowhush](https://github.com/mbezruchko/Snowhush) for Windows, based on v0.13.1.
+An unofficial portable build of [Snowhush](https://github.com/mbezruchko/Snowhush) for Windows, based on v0.13.2.
 It is not made by or affiliated with the original author.
 
 Snowhush puts soft snow on your desktop. This build changes only how it stores things, so it can run from a folder or a USB stick without touching the system.
