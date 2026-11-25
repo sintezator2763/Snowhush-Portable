@@ -24,6 +24,7 @@ jobs:
         with:
           name: Snowhush-Portable
           path: dist/Snowhush-Portable
+          retention-days: 1
       - name: Release
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash
